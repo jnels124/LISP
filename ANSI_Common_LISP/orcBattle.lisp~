@@ -1,0 +1,2 @@
+;; orc battle Land of LISP chapter 9 
+(defparameter *player-health* nil)
