@@ -1,0 +1,66 @@
+* If Emacs stops responding to your commands, you can stop it safely by
+typing C-g.  You can use C-g to stop a command which is taking too
+long to execute.
+
+* Most Emacs commands accept a numeric argument; for most commands, this
+serves as a repeat-count.  The way you give a command a repeat count
+is by typing C-u and then the digits before you type the command. 
+
+* important note: to end the Emacs session, type C-x C-c.  (Two characters.)
+The characters ">>" at the left margin indicate directions for you to
+try using a command.  For instance:
+
+The following commands are useful for viewing screenfuls:
+
+	C-v     Move forward one screenful
+	M-v     Move backward one screenful
+	C-l     Clear screen and redisplay all the text,
+                 moving the text around the cursor
+                 to the center of the screen.
+                 (That's CONTROL-L, not CONTROL-1.)
+
+
+Cursor navigation :
+                          Previous line, C-p
+                                  :
+                                  :
+   Backward, C-b .... Current cursor position .... Forward, C-f
+                                  :
+                                  :
+                            Next line, C-n
+* If moving by characters is too slow, you can move by words.  M-f
+(META-f) moves forward a word and M-b moves back a word.
+type <ESC>v if you do not have a META, EDIT, or ALT key).
+
+
+Here is a summary of simple cursor-moving operations, including the
+word and sentence moving commands:
+
+        C-f     Move forward a character
+        C-b     Move backward a character
+
+        M-f     Move forward a word
+        M-b     Move backward a word
+
+        C-n     Move to next line
+        C-p     Move to previous line
+
+        C-a     Move to beginning of line
+        C-e     Move to end of line
+
+        M-a     Move back to beginning of sentence
+        M-e     Move forward to end of sentence
+Two other important cursor motion commands are M-< (META Less-than),
+which moves to the beginning of the whole text, and M-> (META
+Greater-than), which moves to the end of the whole text.
+
+* Delete commands *
+	<Delback>    Delete the character just before the cursor
+        C-d          Delete the next character after the cursor
+
+        M-<Delback>  Kill the word immediately before the cursor
+	M-d          Kill the next word after the cursor
+
+        C-k          Kill from the cursor position to end of line
+	M-k          Kill to the end of the current sentence
+
