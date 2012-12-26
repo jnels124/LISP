@@ -1,80 +1,56 @@
-(defparameter *width* 100)  
+(defparameter *width* 100)
 (defparameter *height* 30)
-
-;; Defines the jungle area within the world. 
-;; First 2 numbers are the x and y coordinates of 
-;;   the top-left corner
-;; Last two numbers are the jungle height and width
-(defparameter *jungle* '(45 10 10 10)) 
-;; This means if the animal finds a plant, it 
-;;   will gain 80 days worth of food by eating it 
+(defparameter *jungle* '(45 10 10 10))
 (defparameter *plant-energy* 80)
 
-;; hash table for plants
-;; The key for a value is the x,y cordinate in our world
 (defparameter *plants* (make-hash-table :test #'equal))
 
-;;Functions for plants
 (defun random-plant (left top width height)
-  (let ((pos (cons (+ left (random width)) (+ top (random height)))))
-       (setf (gethash pos *plants*) t)))
+   (let ((pos (cons (+ left (random width)) (+ top (random height)))))
+        (setf (gethash pos *plants*) t)))
 
 (defun add-plants ()
-  (apply #'random-plant *jungle*)
-  (random-plant 0 0 *width* *height*))
+   (apply #'random-plant *jungle*)
+   (random-plant 0 0 *width* *height*))
 
-;; Structure to define an animal
-;; x y -> position
-;; energy -> Tracks how many days of energy an animal has
-;; dir -> Track what direction the animal is facing in
-;;            in the range of 0-7 to -> all diretions in a square
-;; genes -> 8 genes consisting of + ints which represent 8 slots 
-;;           that will encircle the animal 
-;;         this corresponds to the 8 dir animal can move
 (defstruct animal x y energy dir genes)
 
-;; list of animals 
-(defparameter *animals*
-  (list (make-animal :x       (ash *width* -1)
-      		     :y       (ash *height* -1)
-      		     :energy  1000
-      		     :dir     0
-		     :genes   (loop repeat 8
-       				    collecting (1+ (random 10))))))
+(defparameter *animals* 
+    (list (make-animal :x      (ash *width*  -1)
+                       :y      (ash *height* -1)
+                       :energy 1000
+                       :dir    0
+                       :genes  (loop repeat 8
+                                     collecting (1+ (random 10))))))
 
-;; Allow animal to move arround 
 (defun move (animal)
   (let ((dir (animal-dir animal))
-	(x (animal-x animal))
-	(y (animal-y animal)))
-  (setf (animal-x animal) (mod (+ x
-				  (cond ((and (>= dir 2) (< dir 5)) 1)
-				        ((or (= dir 1) (= dir 5)) 0)
-				        (t -1))
-			          *width*)
-			       *width*))
-  
-  (setf (animal-y animal) (mod (+ y
-				  (cond ((and (>= dir 0) (< dir 3)) -1)
-					((and (>= dir 4) (< dir 7)) 1)
-					 (t 0))
-				  *height*)
-			       *height*))
-  (decf (animal-energy animal))))
+        (x (animal-x animal))
+        (y (animal-y animal)))
+    (setf (animal-x animal) (mod (+ x
+                                    (cond ((and (>= dir 2) (< dir 5)) 1)
+                                          ((or (= dir 1) (= dir 5)) 0)
+                                          (t -1))
+                                    *width*)
+                                 *width*))
+    (setf (animal-y animal) (mod (+ y
+                                    (cond ((and (>= dir 0) (< dir 3)) -1)
+                                          ((and (>= dir 4) (< dir 7)) 1)
+                                          (t 0))
+                                    *height*)
+                                 *height*))
+    (decf (animal-energy animal))))
 
-;; Uses animals genes to determine if and how much it will turn 
 (defun turn (animal)
   (let ((x (random (apply #'+ (animal-genes animal)))))
     (labels ((angle (genes x)
-	       (let ((xnu (- x (car genes))))
-		 (if (< xnu 0)
-		     0
-		     (1+ (angle (cdr genes) xnu))))))
-	    (setf (animal-dir animal)
-		  (mod (+ (animal-dir animal) (angle (animal-genes animal) x))
-		       8)))))
-	       
-;; checks if their is a plant at current location and if so the plant is consumed
+               (let ((xnu (- x (car genes))))
+                 (if (< xnu 0)
+                     0
+                     (1+ (angle (cdr genes) xnu))))))
+        (setf (animal-dir animal)
+              (mod (+ (animal-dir animal) (angle (animal-genes animal) x)) 8)))))
+
 (defun eat (animal)
   (let ((pos (cons (animal-x animal) (animal-y animal))))
     (when (gethash pos *plants*)
@@ -83,7 +59,6 @@
 
 (defparameter *reproduction-energy* 200)
 
-;; Animal reproduction
 (defun reproduce (animal)
   (let ((e (animal-energy animal)))
     (when (>= e *reproduction-energy*)
@@ -95,8 +70,6 @@
         (setf (animal-genes animal-nu) genes)
         (push animal-nu *animals*)))))
 
-
-;; Simulate a day in world
 (defun update-world ()
   (setf *animals* (remove-if (lambda (animal)
                                  (<= (animal-energy animal) 0))
@@ -109,7 +82,6 @@
         *animals*)
   (add-plants))
 
-;; Draw the world
 (defun draw-world ()
   (loop for y
         below *height*
@@ -126,8 +98,6 @@
                                          (t #\space))))
                   (princ "|"))))
 
-
-;; User interface for simulation
 (defun evolution ()
   (draw-world)
   (fresh-line)
