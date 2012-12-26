@@ -1,0 +1,25 @@
+(defparameter *width* 100)  
+(defparameter *height* 30)
+
+;; Defines the jungle area within the world. 
+;; First 2 numbers are the x and y coordinates of 
+;;   the top-left corner
+;; Last two numbers are the jungle height and width
+(defparameter *jungle* '(45 10 10 10)) 
+;; This means if the animal finds a plant, it 
+;;   will gain 80 days worth of food by eating it 
+(defparameter *plant-energy 80)
+
+;; hash table for plants
+;; The key for a value is the x,y cordinate in our world
+(defparameter *plants* (make-hash-table :test #'equal))
+
+
+;;Functions for plants
+(defun random-plant (left top width height)
+  (let ((pos (cons (+ left (random width)) (+ top (random height)))))
+       (setf (gethash pos *plants*) t)))
+
+(defun add-plants ()
+  (apply #'random-plant *jungle*)
+  (random-plant 0 0 *width* *height*))
