@@ -1,0 +1,41 @@
+;; Chapter 12 land of lisp 
+;; Streams are a lisp data type that allow you to take some external 
+;;    resource and make it look like just another piece of data you can 
+;;    manipulate with your code.
+;;     External resources can be multiple things such as a file on a disk
+;;       , another computer on a network, or text in a console. 
+
+;; Streams by type of resource
+;;   Console Streams -> What you use when communicating with the repel 
+;;   File streams -> Let us read and wite to files on hard drive
+;;   Socket streams -> Communicate with other computers on a network 
+;;   String streams -> Lets us send and recieve text from a lisp string
+;;       String streams are unique because rather allow to communicate 
+;;         with the outside world, instead they allow you to manipulate 
+;;         strings in an interesting way
+
+;; Streams by direction
+;;   Output stream -> Writes data to a stream
+;;      From most primitive level you can do 2 things :
+;;        1. Check if the stream is valid 
+;;        2. Push a new item onto the stream
+
+;; Checks for a valid output stream. Stream associated with repel is *standard-output*
+(output-stream-p *standard-output*)
+
+;; Pushes a character onto the stream
+(write-char #\x *standard-output*)
+
+;;   Input stream-> Reads data 
+;;     1. Check if stream is valid
+;;     2. Pop an item off of the stream
+
+;; Checks for a valid input stream. Stream associated with repel is *standard-input*
+(input-stream-p *standard-input*)
+
+;; Pop an item off of the stream 
+(read-char *standard-input*) 
+
+;; Creates a file stream and writes "my data" to a file named streamData.txt
+(with-open-file (my-stream "streamData.txt" :direction :output)
+		(print "my data" my-stream))
